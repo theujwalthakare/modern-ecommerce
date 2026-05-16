@@ -7,6 +7,21 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+## Email checkout setup
+
+The checkout page sends order confirmation mail through a Cloudflare Worker proxy.
+
+Add this to your local `.env` file:
+
+```env
+VITE_CLOUDFLARE_WORKER_URL=https://your-worker-name.workers.dev/
+```
+
+Notes:
+- Restart the Vite dev server after changing `.env`.
+- The worker must allow your frontend origin and proxy requests to Brevo.
+- Do not use a placeholder hostname like `your-worker-name.workers.dev` unless it is your actual deployed worker.
+
 ## React Compiler
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).

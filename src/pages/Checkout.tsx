@@ -105,6 +105,11 @@ export default function Checkout() {
   const sendEmailWithAttachment = async (pdfDoc: jsPDF) => {
     try {
       const base64Pdf = pdfDoc.output('datauristring').split(',')[1];
+      const workerUrl = import.meta.env.VITE_CLOUDFLARE_WORKER_URL?.trim();
+
+      if (!workerUrl) {
+        throw new Error('VITE_CLOUDFLARE_WORKER_URL is not configured');
+      }
       
       const emailPayload = {
         sender: {
@@ -138,7 +143,7 @@ export default function Checkout() {
 
       // Send to Cloudflare Worker endpoint
       const response = await axios.post(
-        import.meta.env.VITE_CLOUDFLARE_WORKER_URL || 'https://your-worker-url.workers.dev/',
+        workerUrl,
         emailPayload,
         {
           headers: {
@@ -149,8 +154,8 @@ export default function Checkout() {
 
       console.log('Email sent successfully:', response.data);
       return true;
-    } catch (error) {
-      console.error('Error sending email:', error);
+    } catch (error: any) {
+      console.error('Error sending email:', error?.response?.status, error?.response?.data ?? error?.message ?? error);
       throw error;
     }
   };
